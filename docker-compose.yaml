@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  ### Postgres Database
+  postgres:
+    image: postgres:10.4
+    container_name: postgres
+    networks:
+      - rede
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+  ### API Spring Boot ###
+  api:
+    build: './'
+    container_name: api
+    depends_on:
+      - postgres
+    networks:
+      - rede
+    environment:
+      - PORT=8080
+      - DATABASE_HOST=postgres
+      - DATABASE_NAME=db
+      - DATABASE_USER=user
+      - DATABASE_PASSWORD=password
+      - DATABASE_PORT=5432
+    ports:
+      - 8080:8080
+volumes:
+  db_data: {}
+networks:
+  rede:
+    driver: bridge
+
