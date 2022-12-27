@@ -24,24 +24,30 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_USER: user
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: ester
+      - MYSQL_HOST=%
+      - MYSQL_USER=root
+#      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=db
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+#      - MYSQL_PASSWORD=password
   ### API Spring Boot ###
   api:
     build: './'
     container_name: api
     depends_on:
       - db
+
     networks:
       - rede
     environment:
       - PORT=8080
       - DATABASE_HOST=db
-      - DATABASE_NAME=ester
-      - DATABASE_USER=user
+      - DATABASE_NAME=db
+      - DATABASE_USER=root
       - DATABASE_PASSWORD=password
       - DATABASE_PORT=3306
+    links:
+      - db
     ports:
       - 8080:8080
 volumes:
