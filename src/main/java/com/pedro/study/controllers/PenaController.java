@@ -33,7 +33,7 @@ public class PenaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PenaODTO> retornarPorIdPenaODTOResponseEntity(@PathVariable Integer id) {
+    public ResponseEntity<PenaODTO> retornarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(penaConversor.modelToODTO(this.penaService.buscarPorId(id)));
     }
 
