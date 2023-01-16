@@ -23,7 +23,7 @@ public class Artigo {
     private String categoria;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topico-lei_id")
+    @JoinColumn(name = "topicoLei_id")
     private TopicoLei topicoLei;
 
     @OneToMany(mappedBy = "artigo",fetch = FetchType.LAZY)

@@ -1,21 +1,21 @@
 version: "3.8"
 services:
   ### Postgres Database
-#  postgres:
-#    image: postgres:10.4
-#    container_name: postgres
-#    networks:
-#      - rede
-#    restart: always
-#    ports:
-#      - 5433:5432
-#    environment:
-#      - POSTGRES_USER=user
-#      - POSTGRES_PASSWORD=password
-#      - POSTGRES_DB=db
-  db:
+  #  postgres:
+  #    image: postgres:10.4
+  #    container_name: postgres
+  #    networks:
+  #      - rede
+  #    restart: always
+  #    ports:
+  #      - 5433:5432
+  #    environment:
+  #      - POSTGRES_USER=user
+  #      - POSTGRES_PASSWORD=password
+  #      - POSTGRES_DB=db
+  db3:
     image: mysql:latest
-    container_name: db
+    container_name: db3
     networks:
       - rede
     volumes:
@@ -25,29 +25,29 @@ services:
       - 3306:3306
     environment:
       - MYSQL_HOST=%
-      - MYSQL_USER=root
-#      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=db
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-#      - MYSQL_PASSWORD=password
+      - MYSQL_USER=user
+      #      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=db3
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+      - MYSQL_PASSWORD=password
   ### API Spring Boot ###
   api:
     build: './'
     container_name: api
     depends_on:
-      - db
+      - db3
 
     networks:
       - rede
     environment:
       - PORT=8080
-      - DATABASE_HOST=db
-      - DATABASE_NAME=db
-      - DATABASE_USER=root
+      - DATABASE_HOST=db3
+      - DATABASE_NAME=db3
+      - DATABASE_USER=user
       - DATABASE_PASSWORD=password
       - DATABASE_PORT=3306
     links:
-      - db
+      - db3
     ports:
       - 8080:8080
 volumes:
