@@ -1,18 +1,20 @@
 version: "3.8"
 services:
-  ### Postgres Database
-  postgres:
-    image: postgres:10.4
-    container_name: postgres
-    networks:
-      - rede
-    restart: always
-    ports:
-      - 5433:5432
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=db
+  ## Postgres Database
+
+    postgres:
+      image: postgres:10.4
+      container_name: postgres
+      networks:
+        - rede
+      restart: always
+      ports:
+        - 5433:5432
+      environment:
+        - POSTGRES_USER=user
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_DB=db
+
   #  my:
   #    image: mysql:5
   #    container_name: my
@@ -50,6 +52,9 @@ services:
 #      - my
 #    ports:
 #      - 8080:8080
+
+  ### API Spring Boot ###
+
 volumes:
   db_data: {}
 networks:

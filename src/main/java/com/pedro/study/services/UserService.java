@@ -1,5 +1,6 @@
 package com.pedro.study.services;
 
+import com.pedro.study.dto.output.UserODTO;
 import com.pedro.study.exceptions.exceptionsPersonalizadas.NotFoundExceptionStudy;
 import com.pedro.study.exceptions.exceptionsPersonalizadas.UniqueExceptionStudy;
 import com.pedro.study.model.Authorization;
@@ -8,16 +9,18 @@ import com.pedro.study.model.User;
 import com.pedro.study.repositories.AuthorizationRepository;
 import com.pedro.study.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -86,24 +89,28 @@ public class UserService implements UserDetailsService {
                 .findByLogin(userName)
                 .orElseThrow(() -> new NotFoundExceptionStudy("Usuario inexistente!"));
 
-        List<Authorization> authorizations = this.authorizationRepository
-                .buscarPorAuthorizaçoesByUser(user.getId());
+//        List<Authorization> authorizations = this.authorizationRepository
+//                .buscarPorAuthorizaçoesByUser(user.getId());
+//        Collection<GrantedAuthority> authorities = null;
+//
+//
+//        List<Role> r = new ArrayList<>();
+//        for (Authorization a : authorizations) {
+//            r.add(a.getRole());
+//        }
+//
+//        String[] v = new String[r.size()];
+//
+//        for (int i = 0; i < r.size(); i++) {
+//            v[i] = r.get(i).getDescricao();
+//        }
 
-        List<Role> r = new ArrayList<>();
-        for (Authorization a : authorizations) {
-            r.add(a.getRole());
-        }
-        System.out.println(authorizations.size());
-        String[] v = new String[r.size()];
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("");
 
-        for (int i = 0; i < r.size(); i++) {
-            v[i] = r.get(i).getDescricao();
-        }
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getLogin())
-                .password(user.getSenha())
-                .roles(v)
-                .build();
+        return new org.springframework.security.core.userdetails.User(
+                user.getLogin(),
+                user.getSenha(),
+                List.of(simpleGrantedAuthority)
+        );
     }
 }
