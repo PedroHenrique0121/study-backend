@@ -89,15 +89,14 @@ public class UserService implements UserDetailsService {
                 .findByLogin(userName)
                 .orElseThrow(() -> new NotFoundExceptionStudy("Usuario inexistente!"));
 
-//        List<Authorization> authorizations = this.authorizationRepository
-//                .buscarPorAuthorizaçoesByUser(user.getId());
-//        Collection<GrantedAuthority> authorities = null;
-//
-//
-//        List<Role> r = new ArrayList<>();
-//        for (Authorization a : authorizations) {
-//            r.add(a.getRole());
-//        }
+        List<Authorization> authorizations = this.authorizationRepository
+                .buscarPorAuthorizaçoesByUser(user.getId());
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<Role> r = new ArrayList<>();
+        for (Authorization a : authorizations) {
+           authorities.add( new SimpleGrantedAuthority(a.getRole().getDescricao()));
+        }
 //
 //        String[] v = new String[r.size()];
 //
@@ -105,12 +104,11 @@ public class UserService implements UserDetailsService {
 //            v[i] = r.get(i).getDescricao();
 //        }
 
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("");
 
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
                 user.getSenha(),
-                List.of(simpleGrantedAuthority)
+                authorities
         );
     }
 }
