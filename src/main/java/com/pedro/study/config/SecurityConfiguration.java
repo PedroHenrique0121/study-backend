@@ -11,40 +11,39 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-//
-//@EnableWebSecurity
-//@AllArgsConstructor
-//public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-//
-//    private UserService userService;
-//    @Override
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//                .userDetailsService(userService)
-//                .passwordEncoder(passwordEncoder());
-////                .inMemoryAuthentication()
-////                .withUser("fulano")
-////                .password("123")
-////                .roles("USER");
-//    }
-//
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
-//
-////    @Override
-////    protected void configure(HttpSecurity http) throws Exception {
-////        http
-////                .csrf().disable()
-////                .cors()
-////                .and()
-////                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-////    }
-//
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
-//}
+
+@EnableWebSecurity
+@AllArgsConstructor
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private UserService userService;
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userService)
+                .passwordEncoder(passwordEncoder());
+//                .inMemoryAuthentication()
+//                .withUser("fulano")
+//                .password("123")
+//                .roles("USER");
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .cors()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+}
