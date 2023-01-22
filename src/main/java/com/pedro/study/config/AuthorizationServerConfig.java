@@ -1,5 +1,6 @@
 package com.pedro.study.config;
 
+
 import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -8,16 +9,24 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.pedro.study.model.User;
 import com.pedro.study.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.server.authorization.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenCustomizer;
+
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,6 +61,7 @@ import java.security.KeyStore;
 import java.time.Duration;
 import java.util.Arrays;
 
+
 @Configuration
 @EnableWebSecurity
 
@@ -71,6 +81,16 @@ public class AuthorizationServerConfig  {
     }
 
     @Bean
+
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey(chaveJWT);
+
+        return converter;
+    }
+
+
+
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
@@ -78,6 +98,26 @@ public class AuthorizationServerConfig  {
                 .authenticated();
         return httpSecurity.formLogin(Customizer.withDefaults()).build();
 
+    }
+
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> jwtEncodingContextOAuth2TokenCustomizer(UserRepository userRepository){
+        return (jwtEncodingContext -> {
+
+            Authentication authentication = jwtEncodingContext.getPrincipal();
+
+                final org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+
+                final User userEntity =  userRepository.findByLogin(user.getUsername())
+                        .orElseThrow(()-> new RuntimeException("dgsfhsfghdfs"));
+                System.out.println(userEntity.getNome());
+
+
+
+            jwtEncodingContext.getClaims().claim("user_Id","askdfjadskfhjjih");
+
+
+        });
     }
 
 

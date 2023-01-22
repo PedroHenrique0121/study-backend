@@ -1,58 +1,62 @@
 version: "3.8"
 services:
-  ### Postgres Database
-  #  postgres:
-  #    image: postgres:10.4
-  #    container_name: postgres
+  ## Postgres Database
+
+    postgres:
+      image: postgres:10.4
+      container_name: postgres
+      networks:
+        - rede
+      restart: always
+      ports:
+        - 5433:5432
+      environment:
+        - POSTGRES_USER=user
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_DB=db
+
+  #  my:
+  #    image: mysql:5
+  #    container_name: my
   #    networks:
   #      - rede
+  #    volumes:
+  #      - db_data:/var/lib/mysql
   #    restart: always
   #    ports:
-  #      - 5433:5432
+  #      - 3306:3306
   #    environment:
-  #      - POSTGRES_USER=user
-  #      - POSTGRES_PASSWORD=password
-  #      - POSTGRES_DB=db
-  db3:
-    image: mysql:latest
-    container_name: db3
-    networks:
-      - rede
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: always
-    ports:
-      - 3306:3306
-    environment:
-      - MYSQL_HOST=%
-      - MYSQL_USER=user
-      #      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=db3
-      - MYSQL_ALLOW_EMPTY_PASSWORD=no
-      - MYSQL_PASSWORD=password
+  #      - MYSQL_HOST=%
+  #      - MYSQL_USER=user
+  ##      - MYSQL_ROOT_PASSWORD=password
+  #      - MYSQL_DATABASE=my
+  #      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+  #      - MYSQL_PASSWORD=password
   ### API Spring Boot ###
-  api:
-    build: './'
-    container_name: api
-    depends_on:
-      - db3
+#  api:
+#    build: './'
+#    container_name: api
+#    depends_on:
+#      - my
+#
+#    networks:
+#      - rede
+#    environment:
+#      - PORT=8080
+#      - DATABASE_HOST=my
+#      - DATABASE_NAME=my
+#      - DATABASE_USER=user
+#      - DATABASE_PASSWORD=password
+#      - DATABASE_PORT=3306
+#    links:
+#      - my
+#    ports:
+#      - 8080:8080
 
-    networks:
-      - rede
-    environment:
-      - PORT=8080
-      - DATABASE_HOST=db3
-      - DATABASE_NAME=db3
-      - DATABASE_USER=user
-      - DATABASE_PASSWORD=password
-      - DATABASE_PORT=3306
-    links:
-      - db3
-    ports:
-      - 8080:8080
+  ### API Spring Boot ###
+
 volumes:
   db_data: {}
 networks:
   rede:
     driver: bridge
-
