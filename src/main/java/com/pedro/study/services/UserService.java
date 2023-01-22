@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
 import java.util.*;
-
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
