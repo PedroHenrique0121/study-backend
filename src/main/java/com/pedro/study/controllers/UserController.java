@@ -1,6 +1,8 @@
 package com.pedro.study.controllers;
 
 
+import com.pedro.study.config.permissoes.MyAdmin;
+import com.pedro.study.config.permissoes.PermitAll;
 import com.pedro.study.dto.input.UserIDTO;
 import com.pedro.study.dto.output.UserODTO;
 import com.pedro.study.model.User;
@@ -26,11 +28,13 @@ public class UserController {
     private UserConversor userConversor;
 
 
+    @PermitAll
     @PostMapping("/cadastrar")
     public ResponseEntity<UserODTO> salvar(@RequestBody @Valid UserIDTO iDTO) {
         return new ResponseEntity<>(userConversor.modelToODTO(userService.salvar(userConversor.dTOToUser(iDTO))), HttpStatus.CREATED);
     }
 
+   @PermitAll
     @GetMapping
     public ResponseEntity<Page<UserODTO>> listarTodos(Pageable pageable) {
         Page<User> pageUser = userService.listarTodos(pageable);
@@ -38,28 +42,33 @@ public class UserController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @PermitAll
     @GetMapping("/{id}")
     @Transactional(propagation = Propagation.REQUIRED)
     public ResponseEntity<UserODTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(userConversor.modelToODTO(userService.buscarPOrId(id)));
     }
 
+    @PermitAll
     @GetMapping("pagination/{nome}")
-    public ResponseEntity<Page<UserODTO>> retornarPorNome(@PathVariable String nome, Pageable pageable){
+    public ResponseEntity<Page<UserODTO>> retornarPorNome(@PathVariable String nome, Pageable pageable) {
         Page<UserODTO> page = this.userService.retornarPorNome(nome, pageable).map(user -> userConversor.modelToODTO(user));
         return ResponseEntity.ok(page);
     }
 
+    @MyAdmin
     @GetMapping("/login/{login}")
-    public ResponseEntity<UserODTO> buscarPorLogin( @PathVariable String login) {
+    public ResponseEntity<UserODTO> buscarPorLogin(@PathVariable String login) {
         return ResponseEntity.ok(userConversor.modelToODTO(userService.retornarPorLogin(login)));
     }
 
+    @MyAdmin
     @PutMapping("/editar/{id}")
     public ResponseEntity<UserODTO> editar(@RequestBody @Valid UserIDTO dto, @PathVariable Integer id) {
         return ResponseEntity.ok(userConversor.modelToODTO(userService.editar(userConversor.dTOToUser(dto), id)));
     }
 
+    @MyAdmin
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletar(@PathVariable Integer id) {
         userService.deletar(id);
