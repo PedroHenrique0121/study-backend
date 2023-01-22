@@ -82,7 +82,6 @@ public class UserService implements UserDetailsService {
         return this.userRepository.findByLogin(login)
                 .orElseThrow(() -> new NotFoundExceptionStudy("Usuario inexistente!"));
     }
-
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user = userRepository
@@ -103,8 +102,6 @@ public class UserService implements UserDetailsService {
 //        for (int i = 0; i < r.size(); i++) {
 //            v[i] = r.get(i).getDescricao();
 //        }
-
-
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
                 user.getSenha(),
