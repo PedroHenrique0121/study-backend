@@ -27,18 +27,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+                .httpBasic()
+                .and()
                 .authorizeRequests()
                 .anyRequest()
-                .permitAll();
-
-
-//                .antMatchers(HttpMethod.POST,"/api/disciplinas/cadastrar").hasAnyAuthority("ROLE_ADMIN")
-//                .antMatchers(HttpMethod.DELETE,"/api/disciplinas/**").hasAuthority("ROLE_ADMIN")
-//                .antMatchers(HttpMethod.PUT,"/api/disciplinas/**").hasAuthority("ROLE_ADMIN")
-//                .antMatchers(HttpMethod.GET,"/api/disciplinas/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-//                .antMatchers("/api/authorization/**").permitAll()
-//                .antMatchers("/api/roles/**").permitAll()
-
+                .authenticated();
     }
+
+
 
 }

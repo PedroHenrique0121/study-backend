@@ -34,7 +34,7 @@ public class UserController {
         return new ResponseEntity<>(userConversor.modelToODTO(userService.salvar(userConversor.dTOToUser(iDTO))), HttpStatus.CREATED);
     }
 
-   @PermitAll
+
     @GetMapping
     public ResponseEntity<Page<UserODTO>> listarTodos(Pageable pageable) {
         Page<User> pageUser = userService.listarTodos(pageable);
