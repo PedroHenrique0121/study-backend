@@ -1,5 +1,7 @@
 package com.pedro.study.controllers;
 
+import com.pedro.study.config.permissoes.MyAdmin;
+import com.pedro.study.config.permissoes.MyUser;
 import com.pedro.study.model.Role;
 import com.pedro.study.services.RoleService;
 import lombok.AllArgsConstructor;
@@ -17,21 +19,25 @@ public class RoleController {
 
     private RoleService roleService;
 
+    @MyAdmin
     @PostMapping()
     public ResponseEntity<Role> salvar(@Valid @RequestBody Role role){
         return new ResponseEntity<>(this.roleService.salvar(role), HttpStatus.CREATED);
     }
 
+    @MyAdmin
     @PutMapping("/{id}")
     public ResponseEntity<Role> editar(@Valid @RequestBody Role role, @PathVariable Integer id){
         return ResponseEntity.ok(this.roleService.editar(role,id));
     }
 
+    @MyAdmin
     @GetMapping("/{id}")
     public ResponseEntity<Role> retornarPorId(@PathVariable Integer id){
         return ResponseEntity.ok(this.roleService.buscarPorId(id));
     }
 
+    @MyAdmin
     @GetMapping()
     public ResponseEntity<List<Role>> retornarTodas(){
         return ResponseEntity.ok(this.roleService.retornarTodas());

@@ -1,5 +1,7 @@
 package com.pedro.study.controllers;
 
+import com.pedro.study.config.permissoes.MyAdmin;
+import com.pedro.study.config.permissoes.MyUser;
 import com.pedro.study.dto.input.DisciplinaIDTO;
 import com.pedro.study.dto.output.DisciplinaODTO;
 import com.pedro.study.model.Disciplina;
@@ -24,6 +26,8 @@ public class DisciplinaController {
     private DisciplinaService disciplinaService;
     private DisciplinaConversor disciplinaConversor;
 
+    @MyAdmin
+    @MyUser
     @PostMapping("/cadastrar")
     public ResponseEntity<DisciplinaODTO> salvar(@RequestBody @Valid DisciplinaIDTO dto) {
         return new ResponseEntity<>(
@@ -31,11 +35,15 @@ public class DisciplinaController {
                 HttpStatus.CREATED);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/{id}")
     public ResponseEntity<DisciplinaODTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(disciplinaConversor.modelToODTO(disciplinaService.buscarPorId(id)));
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/pagination")
     public ResponseEntity<Page<DisciplinaODTO>> retornarTodas(Pageable pageable) {
         Page<Disciplina> pageModel = disciplinaService.retornarTodas(pageable);
@@ -43,6 +51,8 @@ public class DisciplinaController {
         return ResponseEntity.ok(pageODTO);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping()
     public ResponseEntity<List<DisciplinaODTO>> retornarTodasSemPaginacao() {
         List<Disciplina> listaModel = disciplinaService.retornarTodasSemPaginacao();
@@ -51,6 +61,8 @@ public class DisciplinaController {
         return ResponseEntity.ok(listaODTO);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/search/pagination/{descricao}")
     public ResponseEntity<Page<DisciplinaODTO>> buscarPorDescricao(@PathVariable String descricao, Pageable pageable) {
         Page<Disciplina> pageModel = disciplinaService.buscarPorDescricao(descricao, pageable);
@@ -58,6 +70,8 @@ public class DisciplinaController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/search/{descricao}")
     public ResponseEntity<List<DisciplinaODTO>> buscarPorDescricaoSemPaginacao(@PathVariable String descricao) {
         List<Disciplina> listaModel = disciplinaService.buscarPorDescricaoNotPagination(descricao);
@@ -68,6 +82,8 @@ public class DisciplinaController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @PutMapping("/editar/{id}")
     public ResponseEntity<DisciplinaODTO> editar(@RequestBody @Valid DisciplinaIDTO dto, @PathVariable Integer id) {
         return new ResponseEntity<>(
@@ -76,6 +92,8 @@ public class DisciplinaController {
         );
     }
 
+    @MyAdmin
+    @MyUser
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void excluir(@PathVariable Integer id) {
