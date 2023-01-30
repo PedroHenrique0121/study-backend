@@ -28,13 +28,13 @@ public class UserController {
     private UserConversor userConversor;
 
 
-    @PermitAll
+    @MyAdmin
     @PostMapping("/cadastrar")
     public ResponseEntity<UserODTO> salvar(@RequestBody @Valid UserIDTO iDTO) {
         return new ResponseEntity<>(userConversor.modelToODTO(userService.salvar(userConversor.dTOToUser(iDTO))), HttpStatus.CREATED);
     }
 
-
+    @MyAdmin
     @GetMapping
     public ResponseEntity<Page<UserODTO>> listarTodos(Pageable pageable) {
         Page<User> pageUser = userService.listarTodos(pageable);
@@ -42,14 +42,14 @@ public class UserController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
-    @PermitAll
+    @MyAdmin
     @GetMapping("/{id}")
     @Transactional(propagation = Propagation.REQUIRED)
     public ResponseEntity<UserODTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(userConversor.modelToODTO(userService.buscarPOrId(id)));
     }
 
-    @PermitAll
+    @MyAdmin
     @GetMapping("pagination/{nome}")
     public ResponseEntity<Page<UserODTO>> retornarPorNome(@PathVariable String nome, Pageable pageable) {
         Page<UserODTO> page = this.userService.retornarPorNome(nome, pageable).map(user -> userConversor.modelToODTO(user));

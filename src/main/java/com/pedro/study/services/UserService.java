@@ -93,7 +93,7 @@ public class UserService implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         List<Role> r = new ArrayList<>();
         for (Authorization a : authorizations) {
-           authorities.add( new SimpleGrantedAuthority(a.getRole().getDescricao()));
+           authorities.add( new SimpleGrantedAuthority("ROLE_"+a.getRole().getDescricao()));
         }
 //
 //        String[] v = new String[r.size()];

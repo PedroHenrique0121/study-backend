@@ -1,6 +1,8 @@
 package com.pedro.study.controllers;
 
 
+import com.pedro.study.config.permissoes.MyAdmin;
+import com.pedro.study.config.permissoes.MyUser;
 import com.pedro.study.dto.input.AssuntoIDTO;
 import com.pedro.study.dto.output.AssuntoODTO;
 import com.pedro.study.model.Assunto;
@@ -25,26 +27,30 @@ public class AssuntoController {
 
     private AssuntoService assusntoService;
     private AssuntoConversor assuntoConversor;
-
+    @MyUser
+    @MyAdmin
     @PostMapping("/cadastrar")
     public ResponseEntity<AssuntoODTO> salvar(@RequestBody @Valid AssuntoIDTO dto) {
         return new ResponseEntity<>(
                 assuntoConversor.modelToODTO(assusntoService.salvar(assuntoConversor.iDTOToModel(dto))),
                 HttpStatus.CREATED);
     }
-
+    @MyUser
+    @MyAdmin
     @GetMapping("/{id}")
     public ResponseEntity<AssuntoODTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(assuntoConversor.modelToODTO(assusntoService.buscarPorId(id)));
     }
-
+    @MyUser
+    @MyAdmin
     @GetMapping("/pagination")
     public ResponseEntity<Page<AssuntoODTO>> retornarTodos(Pageable pageable) {
         Page<Assunto> pageModel = assusntoService.retornarTodos(pageable);
         Page<AssuntoODTO> pageODTO = pageModel.map(model -> assuntoConversor.modelToODTO(model));
         return ResponseEntity.ok(pageODTO);
     }
-
+    @MyUser
+    @MyAdmin
     @GetMapping()
     public ResponseEntity<List<AssuntoODTO>> retornarTodosSemPaginacao() {
         List<Assunto> listaModel = assusntoService.retornarTodos();
@@ -52,14 +58,16 @@ public class AssuntoController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(pageODTO);
     }
-
+    @MyUser
+    @MyAdmin
     @GetMapping("/search/pagination/{descricao}")
     public ResponseEntity<Page<AssuntoODTO>> buscarPorDescricao(@PathVariable String descricao, Pageable pageable) {
         Page<Assunto> pageModel = assusntoService.buscarPorDescricao(descricao, pageable);
         Page<AssuntoODTO> pageODTO = pageModel.map(model -> assuntoConversor.modelToODTO(model));
         return ResponseEntity.ok(pageODTO);
     }
-
+    @MyUser
+    @MyAdmin
     @GetMapping("/search/{descricao}")
     public ResponseEntity<List<AssuntoODTO>> buscarPorDescricaoSemPaginacao(@PathVariable String descricao) {
         List<Assunto> listaModel = assusntoService.buscarPorDescricaoSemPaginacao(descricao);
@@ -67,7 +75,8 @@ public class AssuntoController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(pageODTO);
     }
-
+    @MyUser
+    @MyAdmin
     @PutMapping("/editar/{id}")
     public ResponseEntity<AssuntoODTO> editar(@RequestBody @Valid AssuntoIDTO dto, @PathVariable Integer id) {
         return new ResponseEntity<>(
@@ -75,14 +84,16 @@ public class AssuntoController {
                 HttpStatus.OK
         );
     }
-
+    @MyUser
+    @MyAdmin
     @GetMapping("/{descricao}/disciplina/{id}")
     public ResponseEntity<List<AssuntoODTO>>  findByDisciplinaId(@PathVariable Integer id,@PathVariable String descricao){
         List<AssuntoODTO> listaODTO=  this.assusntoService.findByDisciplinaId(id,descricao)
                 .stream().map(model-> this.assuntoConversor.modelToODTO(model)).collect(Collectors.toList());
                 return ResponseEntity.ok(listaODTO);
     }
-
+    @MyUser
+    @MyAdmin
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deletar(@PathVariable Integer id) {

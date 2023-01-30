@@ -1,5 +1,7 @@
 package com.pedro.study.controllers;
 
+import com.pedro.study.config.permissoes.MyAdmin;
+import com.pedro.study.config.permissoes.MyUser;
 import com.pedro.study.dto.input.TopicoLeiIDTO;
 import com.pedro.study.dto.output.TopicoLeiODTO;
 import com.pedro.study.model.TopicoLei;
@@ -24,21 +26,29 @@ public class TopicoLeiController {
     private TopicoLeiService topicoLeiService;
     private TopicoLeiConversor topicoLeiConversor;
 
+    @MyAdmin
+    @MyUser
     @PostMapping("/cadastrar")
     public ResponseEntity<TopicoLeiODTO> salvar(@RequestBody @Valid TopicoLeiIDTO dto) {
         return new ResponseEntity<>(this.topicoLeiConversor.modelToODTO(this.topicoLeiService.salvar(this.topicoLeiConversor.iDTOToModel(dto))), HttpStatus.CREATED);
     }
 
+    @MyAdmin
+    @MyUser
     @PutMapping("/{id}")
     public ResponseEntity<TopicoLeiODTO> editar(@PathVariable Integer id, @RequestBody TopicoLeiIDTO dto) {
         return new ResponseEntity<>(this.topicoLeiConversor.modelToODTO(this.topicoLeiService.editar(this.topicoLeiConversor.iDTOToModel(dto), id)), HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/{id}")
     public ResponseEntity<TopicoLeiODTO> buscarPorId(@PathVariable Integer id) {
         return new ResponseEntity<>(this.topicoLeiConversor.modelToODTO(this.topicoLeiService.buscarPorId(id)), HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/search/pagination/{descricao}")
     public ResponseEntity<Page<TopicoLeiODTO>> buscarPorDescricao(@PathVariable String descricao, Pageable pageable) {
         Page<TopicoLei> pageModel = this.topicoLeiService.buscarPorDescricao(descricao, pageable);
@@ -46,6 +56,8 @@ public class TopicoLeiController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/search/{descricao}")
     public ResponseEntity<List<TopicoLeiODTO>> buscarPorDescricaoSemPaginacao(@PathVariable String descricao, Pageable pageable) {
         List<TopicoLei> listaModel = this.topicoLeiService.buscarPorDescricao(descricao);
@@ -54,6 +66,8 @@ public class TopicoLeiController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/pagination")
     public ResponseEntity<Page<TopicoLeiODTO>> retornarTodos(Pageable pageable) {
         Page<TopicoLei> pageModel = this.topicoLeiService.retornarTodas(pageable);
@@ -61,6 +75,8 @@ public class TopicoLeiController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping()
     public ResponseEntity<List<TopicoLeiODTO>> retornarTodos() {
         List<TopicoLei> listaModel = this.topicoLeiService.retornarTodasSemPaginacao();
@@ -69,6 +85,8 @@ public class TopicoLeiController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/{descricao}/assunto/{id}")
     public ResponseEntity<List<TopicoLeiODTO>> retornarPorDescricaoAssociacaoComAssunto(@PathVariable String descricao, @PathVariable Integer id) {
         List<TopicoLeiODTO> listaODTO = this.topicoLeiService.buscarPorDescricaoOndeExisteAssociacaoComAssunto(descricao, id)
@@ -76,6 +94,8 @@ public class TopicoLeiController {
         return ResponseEntity.ok(listaODTO);
     }
 
+    @MyAdmin
+    @MyUser
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void excluir(@PathVariable Integer id) {

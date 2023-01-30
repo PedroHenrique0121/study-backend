@@ -1,5 +1,7 @@
 package com.pedro.study.controllers;
 
+import com.pedro.study.config.permissoes.MyAdmin;
+import com.pedro.study.config.permissoes.MyUser;
 import com.pedro.study.dto.input.PenaIDTO;
 import com.pedro.study.dto.output.PenaODTO;
 import com.pedro.study.model.Pena;
@@ -22,21 +24,29 @@ public class PenaController {
     private PenaService penaService;
     private PenaConversor penaConversor;
 
+    @MyAdmin
+    @MyUser
     @PostMapping
     public ResponseEntity<PenaODTO> salvar(@RequestBody PenaIDTO dto) {
         return new ResponseEntity<>(penaConversor.modelToODTO(penaService.salvar(penaConversor.iDTOToModel(dto))), HttpStatus.CREATED);
     }
 
+    @MyAdmin
+    @MyUser
     @PutMapping("/editar/{id}")
     public ResponseEntity<PenaODTO> editar(@PathVariable PenaIDTO dto, @PathVariable Integer id) {
         return new ResponseEntity<>(penaConversor.modelToODTO(penaService.salvar(penaConversor.iDTOToModel(dto))), HttpStatus.OK);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/{id}")
     public ResponseEntity<PenaODTO> retornarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(penaConversor.modelToODTO(this.penaService.buscarPorId(id)));
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/pagination")
     public ResponseEntity<Page<PenaODTO>> retornarTodas(Pageable pageable) {
         Page<Pena> pageModel = penaService.buscarTodas(pageable);
@@ -44,6 +54,8 @@ public class PenaController {
         return ResponseEntity.ok(pageDTO);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping()
     public ResponseEntity<List<PenaODTO>> buscarTodasSemPaginacao() {
         List<Pena> listaModel = penaService.buscarTodasSemPginacao();
@@ -52,6 +64,8 @@ public class PenaController {
         return ResponseEntity.ok(listaDTO);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/pagination/search/{descricao}")
     public ResponseEntity<Page<PenaODTO>> retornarPordescricao(@PathVariable String descricao, Pageable pageable) {
         Page<Pena> pageModel = penaService.buscarPorDescricao(descricao, pageable);
@@ -59,6 +73,8 @@ public class PenaController {
         return ResponseEntity.ok(pageDTO);
     }
 
+    @MyAdmin
+    @MyUser
     @GetMapping("/search/{descricao}")
     public ResponseEntity<List<PenaODTO>> retornarPordescricaoSemPaginacao(@PathVariable String descricao, Pageable pageable) {
         List<Pena> pageModel = penaService.buscarPorDescricaoSempaginacao(descricao, pageable);
@@ -67,6 +83,8 @@ public class PenaController {
         return ResponseEntity.ok(pageDTO);
     }
 
+    @MyAdmin
+    @MyUser
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deletar(@PathVariable Integer id) {
