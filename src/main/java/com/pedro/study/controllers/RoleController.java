@@ -43,4 +43,11 @@ public class RoleController {
         return ResponseEntity.ok(this.roleService.retornarTodas());
     }
 
+    @MyAdmin
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void excluir(@PathVariable Integer id){
+
+        this.roleService.excluir(id);
+    }
 }
