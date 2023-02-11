@@ -1,6 +1,5 @@
 package com.pedro.study.services;
 
-import com.pedro.study.dto.output.UserODTO;
 import com.pedro.study.exceptions.exceptionsPersonalizadas.NotFoundExceptionStudy;
 import com.pedro.study.exceptions.exceptionsPersonalizadas.UniqueExceptionStudy;
 import com.pedro.study.model.Authorization;
@@ -9,10 +8,9 @@ import com.pedro.study.model.User;
 import com.pedro.study.repositories.AuthorizationRepository;
 import com.pedro.study.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,11 +27,17 @@ public class UserService implements UserDetailsService {
     private AuthorizationRepository authorizationRepository;
 
     public User salvar(User user) {
+
         try {
-            return userRepository.save(user);
+           User newUser = userRepository.save(user);
+
+            return newUser;
+
         } catch (Exception e) {
             throw new UniqueExceptionStudy("usuario já está cadastrado!");
         }
+
+
     }
 
     public Page<User> listarTodos(Pageable pageable) {
@@ -107,4 +111,6 @@ public class UserService implements UserDetailsService {
                 authorities
         );
     }
+
+
 }
