@@ -1,12 +1,10 @@
 version: "3.8"
 services:
   ## Postgres Database
-
     postgres:
       image: postgres:10.4
       container_name: postgres
-      networks:
-        - rede
+
       restart: always
       ports:
         - 5433:5432
@@ -15,48 +13,44 @@ services:
         - POSTGRES_PASSWORD=password
         - POSTGRES_DB=db
 
-  #  my:
-  #    image: mysql:5
-  #    container_name: my
-  #    networks:
-  #      - rede
-  #    volumes:
-  #      - db_data:/var/lib/mysql
-  #    restart: always
-  #    ports:
-  #      - 3306:3306
-  #    environment:
-  #      - MYSQL_HOST=%
-  #      - MYSQL_USER=user
-  ##      - MYSQL_ROOT_PASSWORD=password
-  #      - MYSQL_DATABASE=my
-  #      - MYSQL_ALLOW_EMPTY_PASSWORD=no
-  #      - MYSQL_PASSWORD=password
-  ### API Spring Boot ###
-#  api:
-#    build: './'
-#    container_name: api
-#    depends_on:
-#      - my
-#
-#    networks:
-#      - rede
-#    environment:
-#      - PORT=8080
-#      - DATABASE_HOST=my
-#      - DATABASE_NAME=my
-#      - DATABASE_USER=user
-#      - DATABASE_PASSWORD=password
-#      - DATABASE_PORT=3306
-#    links:
-#      - my
-#    ports:
-#      - 8080:8080
+  # rabbitmq
+    rabbitmq:
+      image: library/rabbitmq:3.7.8-management
+      ports:
+        - 5672:5672
+        - 15672:15672
+      environment:
+        - RABBITMQ_DEFAULT_USER=admin
+        - RABBITMQ_DEFAULT_PASS=123
+      restart: always
+      container_name: rabbitmq
+  ## API Spring Boot ###
+    api:
+      build: './'
+      container_name: api
+      depends_on:
+        - postgres
+        - rabbitmq
 
-  ### API Spring Boot ###
+      environment:
+        - PORT=8080
+        - DATABASE_HOST=postgres
+        - DATABASE_NAME=db
+        - DATABASE_USER=user
+        - DATABASE_PASSWORD=password
+        - DATABASE_PORT=5432
+        - RABBITMQ_HOST=rabbitmq
+        - RABBITMQ_PORT=5672
+        - RABBITMQ_USER=admin
+        - RABBITMQ_PASSWORD=123
 
-volumes:
-  db_data: {}
-networks:
-  rede:
-    driver: bridge
+
+      ports:
+        - 8080:8080
+
+
+
+
+
+
+
