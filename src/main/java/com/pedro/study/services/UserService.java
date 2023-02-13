@@ -5,9 +5,11 @@ import com.pedro.study.exceptions.exceptionsPersonalizadas.UniqueExceptionStudy;
 import com.pedro.study.model.Authorization;
 import com.pedro.study.model.Role;
 import com.pedro.study.model.User;
+import com.pedro.study.modelmapper.conversores.UserConversor;
 import com.pedro.study.repositories.AuthorizationRepository;
 import com.pedro.study.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -25,12 +27,15 @@ public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
     private AuthorizationRepository authorizationRepository;
-
+    private RabbitTemplate rabbitTemplate;
+    private UserConversor userConversor;
     public User salvar(User user) {
+
 
         try {
            User newUser = userRepository.save(user);
 
+           this.rabbitTemplate.convertAndSend("users.v1.user","",userConversor.modelToODTO(newUser));
             return newUser;
 
         } catch (Exception e) {

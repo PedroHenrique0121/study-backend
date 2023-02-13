@@ -3,7 +3,7 @@
 #COPY /pom.xml /app
 #RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip
 
-FROM  openjdk:8
+FROM  openjdk:11
 EXPOSE 8080
 COPY target/study.jar study.jar
 ENTRYPOINT ["java", "-jar", "/study.jar"]
