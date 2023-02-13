@@ -4,7 +4,6 @@ services:
     postgres:
       image: postgres:10.4
       container_name: postgres
-
       restart: always
       ports:
         - 5433:5432
@@ -31,7 +30,6 @@ services:
       depends_on:
         - postgres
         - rabbitmq
-
       environment:
         - PORT=8080
         - DATABASE_HOST=postgres
@@ -43,8 +41,6 @@ services:
         - RABBITMQ_PORT=5672
         - RABBITMQ_USER=admin
         - RABBITMQ_PASSWORD=123
-
-
       ports:
         - 8080:8080
 
